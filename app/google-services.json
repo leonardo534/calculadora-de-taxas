@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "581022474592",
+    "firebase_url": "https://calculadora-de-taxas-db915.firebaseio.com",
+    "project_id": "calculadora-de-taxas-db915",
+    "storage_bucket": "calculadora-de-taxas-db915.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:581022474592:android:17c4d05eb5747480643e05",
+        "android_client_info": {
+          "package_name": "com.leonardosilva.calculadoradetaxas"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "581022474592-5760hqnvchiu7klr0suq3jg91jmonbg0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.leonardosilva.calculadoradetaxas",
+            "certificate_hash": "97d681ea556e275d7dd39b4f7072a80e71f55b47"
+          }
+        },
+        {
+          "client_id": "581022474592-0vsmdrsnbehavo3p1a57qgtcfj7jk8ck.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6w_0I_WGke1X1tBz-JwL8QHQtWWEiuhQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "581022474592-0vsmdrsnbehavo3p1a57qgtcfj7jk8ck.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

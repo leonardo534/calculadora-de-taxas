@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">Testes</string>
+    <string name="parcelas">Parcelas</string>
+    <string name="taxas">Taxas</string>
+    <string name="insertValor">Informe o valor</string>
+    <string name="btnCalcular">Calular</string>
+
+    <string-array name="Maquinetas">
+        <item>Sumup On</item>
+        <item>Sumup Top</item>
+        <item>Sumup Total</item>
+        <item>Minizinha Chip 2</item>
+
+    </string-array>
+
+    <string-array name="parcelas">
+        <item>Debito</item>
+        <item>1x</item>
+        <item>2x</item>
+        <item>3x</item>
+        <item>4x</item>
+        <item>5x</item>
+        <item>6x</item>
+        <item>7x</item>
+        <item>8x</item>
+        <item>9x</item>
+        <item>10x</item>
+        <item>11x</item>
+        <item>12x</item>
+    </string-array>
+
+    <string-array name="taxas">
+        <item>Assumir</item>
+        <item>Repassar</item>
+    </string-array>
+</resources>
