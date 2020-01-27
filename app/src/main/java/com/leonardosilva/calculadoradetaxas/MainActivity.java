@@ -147,18 +147,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     public void buscarModelo(String modelo) {
         switch (modelo) {
-            case "Sumup On":
+            case "Sumup":
                 sumup(modelo.toLowerCase(), unmask(editResultado.getText().toString()), spParcelas.getSelectedItem().toString(), spTaxas.getSelectedItem().toString());
                 break;
-            case "Sumup Top":
-                sumup(modelo.toLowerCase(), unmask(editResultado.getText().toString()), spParcelas.getSelectedItem().toString(), spTaxas.getSelectedItem().toString());
+
+
+            case "PagSeguro":
+                pagseguro(modelo.toLowerCase(), unmask(editResultado.getText().toString()), spParcelas.getSelectedItem().toString(), spTaxas.getSelectedItem().toString());
                 break;
-            case "Sumup Total":
-                sumup(modelo.toLowerCase(), unmask(editResultado.getText().toString()), spParcelas.getSelectedItem().toString(), spTaxas.getSelectedItem().toString());
-                break;
-            case "Minizinha Chip 2":
-                minizinha_chip_2(modelo.toLowerCase(), unmask(editResultado.getText().toString()), spParcelas.getSelectedItem().toString(), spTaxas.getSelectedItem().toString());
-                break;
+
 
             default:
                 Toast.makeText(this, "Modelo em manutenção", Toast.LENGTH_SHORT).show();
@@ -269,7 +266,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
-    public void minizinha_chip_2(final String maquineta, final String valor, final String opTaxa, final String opParcela) {
+    public void pagseguro(final String maquineta, final String valor, final String opTaxa, final String opParcela) {
         if (editResultado.getText().length() == 0) {
             Toast.makeText(this, "Informe um valor", Toast.LENGTH_SHORT).show();
             editResultado.requestFocus();
