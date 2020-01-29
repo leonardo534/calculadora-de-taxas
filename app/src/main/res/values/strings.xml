@@ -8,6 +8,7 @@
     <string-array name="Maquinetas">
         <item>Sumup</item>
         <item>PagSeguro</item>
+        <item>Mercado Pago</item>
 
 
     </string-array>
