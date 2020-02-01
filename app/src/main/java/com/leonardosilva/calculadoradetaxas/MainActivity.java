@@ -627,36 +627,49 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                 if (opTaxa.equals("Debito")) {
 
                                     if (opParcela.equals("Assumir")) {
-//                                        Double valor1 = Double.parseDouble(unmask(valor.trim()));
-//                                        BigDecimal valor2 = new BigDecimal(valor1);
-//                                        BigDecimal valorCobrar_na_hora = new BigDecimal(valor1-((valor1*)));
-//                                        BigDecimal valorCobrar_30Dias = new BigDecimal(valor1 - (valor1 * (debito_30 * 100)) / 100);
-//
-//                                        textViewResultadosUsuario.setText("Valor a receber\n" +
-//                                                "Débito 1 dia: " + colocarVirgula(String.valueOf(valorCobrar_1Dia.setScale(0, BigDecimal.ROUND_UP))) +
-//                                                "\nDébito 30 dias: " + colocarVirgula(String.valueOf(valorCobrar_30Dias.setScale(0, BigDecimal.ROUND_UP))));
-//                                        textViewResultadosCliente.setText("Parcela do Cliente\n" +
-//                                                colocarVirgula(String.valueOf(valor2.setScale(0, BigDecimal.ROUND_UP))) +
-//                                                "\n" + colocarVirgula(String.valueOf(valor2.setScale(0, BigDecimal.ROUND_UP))));
+                                        Double valor1 = Double.parseDouble(unmask(valor.trim()));
+                                        BigDecimal valorReceber_na_hora = new BigDecimal(valor1 - (valor1 * (debito_na_hora * 100)) / 100);
+                                        BigDecimal valorReceber_14 = new BigDecimal(valor1 - (valor1 * (debito_14 * 100)) / 100);
+                                        BigDecimal valorReceber_30 = new BigDecimal(valor1 - (valor1 * (debito_30 * 100)) / 100);
+
+                                        BigDecimal parcelaCliente_na_hora = new BigDecimal(valor1);
+                                        BigDecimal parcelaCliente_14 = new BigDecimal(valor1);
+                                        BigDecimal parcelaCliente_30 = new BigDecimal(valor1);
+
+                                        textViewResultadosUsuario.setText("Valor a receber\n" +
+                                                "Débito na hora: " + colocarVirgula(String.valueOf(valorReceber_na_hora.setScale(0, BigDecimal.ROUND_UP))) +
+                                                "\nDébito 14 dias: " + colocarVirgula(String.valueOf(valorReceber_14.setScale(0, BigDecimal.ROUND_UP))) +
+                                                "\nDébito 30 dias: " + colocarVirgula(String.valueOf(valorReceber_30.setScale(0, BigDecimal.ROUND_UP))));
+
+                                        textViewResultadosCliente.setText("Parcela do Cliente\n" +
+                                                opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_na_hora.setScale(0, BigDecimal.ROUND_UP))) + "\n" +
+                                                opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_14.setScale(0, BigDecimal.ROUND_UP))) + "\n" +
+                                                opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_30.setScale(0, BigDecimal.ROUND_UP))));
 
                                     } else {
 
-//                                        Double valor1 = Double.parseDouble(unmask(valor).trim());
-//                                        BigDecimal valorCobrar_1Dia = new BigDecimal(valor1 + (valor1 * (debito * 100)) / 100);
-//                                        BigDecimal valorCobrar_30Dias = new BigDecimal(valor1 + (valor1 * (debito_30 * 100)) / 100);
-//                                        BigDecimal parcelaCliente_1Dia = new BigDecimal(valor1 + (valor1 * (debito * 100)) / 100);
-//                                        BigDecimal parcelaCliente_30Dias = new BigDecimal(valor1 + (valor1 * (debito_30 * 100)) / 100);
-//
-//                                        textViewResultadosUsuario.setText("Valor a cobrar\n" +
-//                                                "Débito 1 dia: " + colocarVirgula(String.valueOf(valorCobrar_1Dia.setScale(0, BigDecimal.ROUND_UP))) +
-//                                                "\nDébito 30 dias: " + colocarVirgula(String.valueOf(valorCobrar_30Dias.setScale(0, BigDecimal.ROUND_UP))));
-//                                        textViewResultadosCliente.setText("Parcela do Cliente\n" +
-//                                                colocarVirgula(String.valueOf(parcelaCliente_1Dia.setScale(0, BigDecimal.ROUND_UP))) + "\n" +
-//                                                colocarVirgula(String.valueOf(parcelaCliente_30Dias.setScale(0, BigDecimal.ROUND_UP))));
+                                        Double valor1 = Double.parseDouble(unmask(valor).trim());
+                                        BigDecimal valorCobrar_na_hora = new BigDecimal(valor1 / (1 - debito_na_hora));
+                                        BigDecimal valorCobrar_14 = new BigDecimal(valor1 / (1 - debito_14));
+                                        BigDecimal valorCobrar_30 = new BigDecimal(valor1 / (1 - debito_30));
+
+                                        BigDecimal parcelaCliente_na_hora = new BigDecimal(valor1 / (1 - debito_na_hora));
+                                        BigDecimal parcelaCliente_14 = new BigDecimal(valor1 / (1 - debito_14));
+                                        BigDecimal parcelaCliente_30 = new BigDecimal(valor1 / (1 - debito_30));
+
+                                        textViewResultadosUsuario.setText("Valor a cobrar\n" +
+                                                "Débito na hora: " + colocarVirgula(String.valueOf(valorCobrar_na_hora.setScale(0, BigDecimal.ROUND_UP))) +
+                                                "\nDébito 14 dias: " + colocarVirgula(String.valueOf(valorCobrar_14.setScale(0, BigDecimal.ROUND_UP))) +
+                                                "\nDébito 30 dias: " + colocarVirgula(String.valueOf(valorCobrar_30.setScale(0, BigDecimal.ROUND_UP))));
+
+                                        textViewResultadosCliente.setText("Parcela do Cliente\n" +
+                                                colocarVirgula(String.valueOf(parcelaCliente_na_hora.setScale(0, BigDecimal.ROUND_UP))) + "\n" +
+                                                colocarVirgula(String.valueOf(parcelaCliente_14.setScale(0, BigDecimal.ROUND_UP))) + "\n" +
+                                                colocarVirgula(String.valueOf(parcelaCliente_30.setScale(0, BigDecimal.ROUND_UP))));
                                     }
                                 } else if (opTaxa != "Debito") {
 
-                                    if (opParcela.equals("Assumir")) { // ERRADO
+                                    if (opParcela.equals("Assumir")) { // CERTO
                                         Double valor1 = Double.parseDouble(unmask(valor));
                                         Double opTaxa1 = Double.parseDouble(unmask(opTaxa));
                                         int opTaxaInt = Integer.parseInt(unmask(opTaxa));
@@ -665,9 +678,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                             BigDecimal parcelaCliente_na_hora = new BigDecimal(valor1 / opTaxa1);
                                             BigDecimal parcelaCliente_14 = new BigDecimal(valor1 / opTaxa1);
                                             BigDecimal parcelaCliente_30 = new BigDecimal(valor1 / opTaxa1);
-                                            BigDecimal valorReceber_na_hora = new BigDecimal(valor1-((taxa_parcelamento[opTaxaInt]+credito_parcelado_na_hora)*valor1));
-                                            BigDecimal valorReceber_14 = new BigDecimal(valor1-((taxa_parcelamento[opTaxaInt]+credito_parcelado_14)*valor1));
-                                            BigDecimal valorReceber_30 = new BigDecimal(valor1-((taxa_parcelamento[opTaxaInt]+credito_parcelado_30)*valor1));
+                                            BigDecimal valorReceber_na_hora = new BigDecimal(valor1 - ((taxa_parcelamento[opTaxaInt] + credito_parcelado_na_hora) * valor1));
+                                            BigDecimal valorReceber_14 = new BigDecimal(valor1 - ((taxa_parcelamento[opTaxaInt] + credito_parcelado_14) * valor1));
+                                            BigDecimal valorReceber_30 = new BigDecimal(valor1 - ((taxa_parcelamento[opTaxaInt] + credito_parcelado_30) * valor1));
 
                                             textViewResultadosUsuario.setText("Valor a receber\n" +
                                                     "Na hora: " + colocarVirgula(String.valueOf(valorReceber_na_hora.setScale(0, BigDecimal.ROUND_UP))) +
@@ -678,15 +691,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                                     opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_na_hora.setScale(0, BigDecimal.ROUND_UP))) + "\n" +
                                                     opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_14.setScale(0, BigDecimal.ROUND_UP))) + "\n" +
                                                     opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_30.setScale(0, BigDecimal.ROUND_UP))));
-                                        }else{
+                                        } else {
 
                                             BigDecimal parcelaCliente_na_hora = new BigDecimal(valor1 / opTaxa1);
                                             BigDecimal parcelaCliente_14 = new BigDecimal(valor1 / opTaxa1);
                                             BigDecimal parcelaCliente_30 = new BigDecimal(valor1 / opTaxa1);
 
                                             BigDecimal valorReceber_na_hora = new BigDecimal(valor1 - (valor1 * (credito_a_vista_na_hora)));
-                                            BigDecimal valorReceber_14 = new BigDecimal(valor1 - (valor1 * (credito_a_vista_14 )));
-                                            BigDecimal valorReceber_30 = new BigDecimal(valor1 - (valor1 * (credito_a_vista_30 )));
+                                            BigDecimal valorReceber_14 = new BigDecimal(valor1 - (valor1 * (credito_a_vista_14)));
+                                            BigDecimal valorReceber_30 = new BigDecimal(valor1 - (valor1 * (credito_a_vista_30)));
 
                                             textViewResultadosUsuario.setText("Valor a receber\n" +
                                                     "Na hora: " + colocarVirgula(String.valueOf(valorReceber_na_hora.setScale(0, BigDecimal.ROUND_UP))) +
@@ -706,15 +719,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                         int opTaxaInt = Integer.parseInt(unmask(opTaxa));
 
                                         if (opTaxa1 > 1) {
-                                            BigDecimal parcelaCliente_na_hora = new BigDecimal(valor1/(1-(credito_parcelado_na_hora+taxa_parcelamento[opTaxaInt])) / opTaxa1);
-                                            BigDecimal parcelaCliente_14 = new BigDecimal(valor1/(1-(credito_parcelado_14+taxa_parcelamento[opTaxaInt])) / opTaxa1);
-                                            BigDecimal parcelaCliente_30 = new BigDecimal(valor1/(1-(credito_parcelado_30+taxa_parcelamento[opTaxaInt])) / opTaxa1);
+                                            BigDecimal parcelaCliente_na_hora = new BigDecimal(valor1 / (1 - (credito_parcelado_na_hora + taxa_parcelamento[opTaxaInt])) / opTaxa1);
+                                            BigDecimal parcelaCliente_14 = new BigDecimal(valor1 / (1 - (credito_parcelado_14 + taxa_parcelamento[opTaxaInt])) / opTaxa1);
+                                            BigDecimal parcelaCliente_30 = new BigDecimal(valor1 / (1 - (credito_parcelado_30 + taxa_parcelamento[opTaxaInt])) / opTaxa1);
 
-                                            BigDecimal valorCobrar_na_hora = new BigDecimal(valor1/(1-(credito_parcelado_na_hora+taxa_parcelamento[opTaxaInt])));
-                                            BigDecimal valorCobrar_14 = new BigDecimal(valor1/(1-(credito_parcelado_14+taxa_parcelamento[opTaxaInt])));
-                                            BigDecimal valorCobrar_30 = new BigDecimal(valor1/(1-(credito_parcelado_30+taxa_parcelamento[opTaxaInt])));
+                                            BigDecimal valorCobrar_na_hora = new BigDecimal(valor1 / (1 - (credito_parcelado_na_hora + taxa_parcelamento[opTaxaInt])));
+                                            BigDecimal valorCobrar_14 = new BigDecimal(valor1 / (1 - (credito_parcelado_14 + taxa_parcelamento[opTaxaInt])));
+                                            BigDecimal valorCobrar_30 = new BigDecimal(valor1 / (1 - (credito_parcelado_30 + taxa_parcelamento[opTaxaInt])));
 
-                                            textViewResultadosUsuario.setText("Valor a receber\n" +
+                                            textViewResultadosUsuario.setText("Valor a Cobrar\n" +
                                                     "Na hora: " + colocarVirgula(String.valueOf(valorCobrar_na_hora.setScale(0, BigDecimal.ROUND_UP))) +
                                                     "\n14 dias:" + colocarVirgula(String.valueOf(valorCobrar_14.setScale(0, BigDecimal.ROUND_UP))) +
                                                     "\n30 dias:" + colocarVirgula(String.valueOf(valorCobrar_30.setScale(0, BigDecimal.ROUND_UP))));
@@ -723,17 +736,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                                     opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_na_hora.setScale(0, BigDecimal.ROUND_UP))) + "\n" +
                                                     opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_14.setScale(0, BigDecimal.ROUND_UP))) + "\n" +
                                                     opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_30.setScale(0, BigDecimal.ROUND_UP))));
-                                        }else{
+                                        } else {
 
-                                            BigDecimal parcelaCliente_na_hora = new BigDecimal((valor1/(1-credito_a_vista_na_hora)) / opTaxa1);
-                                            BigDecimal parcelaCliente_14 = new BigDecimal((valor1/(1-credito_a_vista_14)) / opTaxa1);
-                                            BigDecimal parcelaCliente_30 = new BigDecimal((valor1/(1-credito_a_vista_30)) / opTaxa1);
+                                            BigDecimal parcelaCliente_na_hora = new BigDecimal((valor1 / (1 - credito_a_vista_na_hora)) / opTaxa1);
+                                            BigDecimal parcelaCliente_14 = new BigDecimal((valor1 / (1 - credito_a_vista_14)) / opTaxa1);
+                                            BigDecimal parcelaCliente_30 = new BigDecimal((valor1 / (1 - credito_a_vista_30)) / opTaxa1);
 
-                                            BigDecimal valorCobrar_na_hora = new BigDecimal(valor1/(1-credito_a_vista_na_hora));
-                                            BigDecimal valorCobrar_14 = new BigDecimal(valor1/(1-credito_a_vista_14));
-                                            BigDecimal valorCobrar_30 = new BigDecimal(valor1/(1-credito_a_vista_30));
+                                            BigDecimal valorCobrar_na_hora = new BigDecimal(valor1 / (1 - credito_a_vista_na_hora));
+                                            BigDecimal valorCobrar_14 = new BigDecimal(valor1 / (1 - credito_a_vista_14));
+                                            BigDecimal valorCobrar_30 = new BigDecimal(valor1 / (1 - credito_a_vista_30));
 
-                                            textViewResultadosUsuario.setText("Valor a receber\n" +
+                                            textViewResultadosUsuario.setText("Valor a Cobrar\n" +
                                                     "Na hora: " + colocarVirgula(String.valueOf(valorCobrar_na_hora.setScale(0, BigDecimal.ROUND_UP))) +
                                                     "\n14 dias:" + colocarVirgula(String.valueOf(valorCobrar_14.setScale(0, BigDecimal.ROUND_UP))) +
                                                     "\n30 dias:" + colocarVirgula(String.valueOf(valorCobrar_30.setScale(0, BigDecimal.ROUND_UP))));
