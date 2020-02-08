@@ -27,6 +27,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private static final String KEY_TAXA_DEBITO_CLIENTE = "taxa_debito_cliente";
+    private static final String KEY_TAXA_DEBITO_2_PF = "taxa_debito_2_pf";
+    private static final String KEY_TAXA_DEBITO_30_PF = "taxa_debito_30_pf";
+    private static final String KEY_TAXA_DEBITO_2_PJ = "taxa_debito_2_pj";
+    private static final String KEY_TAXA_DEBITO_30_PJ = "taxa_debito_30_pj";
     private static final String KEY_TAXA_DEBITO = "taxa_debito";
     private static final String KEY_TAXA_DEBITO_FAT_MENOR_50 = "taxa_debito_fat_menor_50";
     private static final String KEY_TAXA_DEBITO_FAT_MAIOR_50 = "taxa_debito_fat_maior_50";
@@ -36,6 +40,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private static final String KEY_TAXA_DEBITO_30_TARJA = "taxa_debito_30_tarja";
 
     private static final String KEY_CREDITO_PARCELADO = "taxa_credito_parcelado";
+    private static final String KEY_CREDITO_PARCELADO_2_PF = "taxa_credito_parcelado_2_pf";
+    private static final String KEY_CREDITO_PARCELADO_30_PF = "taxa_credito_parcelado_30_pf";
+    private static final String KEY_CREDITO_PARCELADO_2_PJ = "taxa_credito_parcelado_2_pj";
+    private static final String KEY_CREDITO_PARCELADO_30_PJ = "taxa_credito_parcelado_30_pj";
     private static final String KEY_CREDITO_PARCELADO_2_FAT_MENOR_50 = "taxa_credito_parcelado_2_fat_menor_50";
     private static final String KEY_CREDITO_PARCELADO_30_FAT_MENOR_50 = "taxa_credito_parcelado_30_fat_menor_50";
     private static final String KEY_CREDITO_PARCELADO_2_FAT_MAIOR_50 = "taxa_credito_parcelado_2_fat_maior_50";
@@ -46,6 +54,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private static final String KEY_CREDITO_PARCELADO_30_TARJA = "taxa_credito_parcelado_30_tarja";
 
     private static final String KEY_CREDITO_A_VISTA = "taxa_credito_a_vista";
+    private static final String KEY_CREDITO_A_VISTA_2_PF = "taxa_credito_a_vista_2_pf";
+    private static final String KEY_CREDITO_A_VISTA_30_PF = "taxa_credito_a_vista_30_pf";
+    private static final String KEY_CREDITO_A_VISTA_2_PJ = "taxa_credito_a_vista_2_pj";
+    private static final String KEY_CREDITO_A_VISTA_30_PJ = "taxa_credito_a_vista_30_pj";
     private static final String KEY_CREDITO_A_VISTA_2_FAT_MENOR_50 = "taxa_credito_a_vista_2_fat_menor_50";
     private static final String KEY_CREDITO_A_VISTA_30_FAT_MENOR_50 = "taxa_credito_a_vista_30_fat_menor_50";
     private static final String KEY_CREDITO_A_VISTA_2_FAT_MAIOR_50 = "taxa_credito_a_vista_2_fat_maior_50";
@@ -56,6 +68,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private static final String KEY_CREDITO_A_VISTA_30_TARJA = "taxa_credito_a_vista_30_tarja";
 
     private static final String KEY_PARCELAMENTO = "taxa_de_parcelamento";
+    private static final String KEY_PARCELAMENTO_2_PF = "taxa_de_parcelamento_2_pf";
+    private static final String KEY_PARCELAMENTO_30_PF = "taxa_de_parcelamento_30_pf";
+    private static final String KEY_PARCELAMENTO_2_PJ = "taxa_de_parcelamento_2_pj";
+    private static final String KEY_PARCELAMENTO_30_PJ = "taxa_de_parcelamento_30_pj";
     private static final String KEY_PARCELAMENTO_NA_HORA = "taxa_de_parcelamento_na_hora";
     private static final String KEY_PARCELAMENTO_14 = "taxa_de_parcelamento_14";
     private static final String KEY_PARCELAMENTO_30 = "taxa_de_parcelamento_30";
@@ -174,6 +190,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 ifood(modelo.toLowerCase(), unmask(editResultado.getText().toString()), spParcelas.getSelectedItem().toString(), spTaxas.getSelectedItem().toString());
                 break;
 
+            case "BEVImais":
+                bevimais(modelo.toLowerCase(), unmask(editResultado.getText().toString()), spParcelas.getSelectedItem().toString(), spTaxas.getSelectedItem().toString());
+                break;
 
             default:
                 Toast.makeText(this, "Modelo em manutenção", Toast.LENGTH_SHORT).show();
@@ -957,6 +976,205 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                                     opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_2_fat_menor_50.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
                                                     opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_30_fat_maior_50.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
                                                     opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_2_fat_maior_50.setScale(0, BigDecimal.ROUND_UP))));
+                                        }
+                                    }
+                                }
+
+                            } else {
+                                Log.d("TAGG", "Documento não existe");
+                            }
+
+                        }
+
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
+        }
+    }
+
+    public void bevimais(final String maquineta, final String valor, final String opTaxa, final String opParcela) {
+        if (editResultado.getText().length() == 0) {
+            Toast.makeText(this, "Informe um valor", Toast.LENGTH_SHORT).show();
+            editResultado.requestFocus();
+        } else {
+            db.collection(maquineta).document(maquineta).get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                            if (documentSnapshot.exists()) {
+                                Double taxa_credito_a_vista_2_pf = documentSnapshot.getDouble(KEY_CREDITO_A_VISTA_2_PF);
+                                Double taxa_credito_a_vista_30_pf = documentSnapshot.getDouble(KEY_CREDITO_A_VISTA_30_PF);
+                                Double taxa_credito_a_vista_2_pj = documentSnapshot.getDouble(KEY_CREDITO_A_VISTA_2_PJ);
+                                Double taxa_credito_a_vista_30_pj = documentSnapshot.getDouble(KEY_CREDITO_A_VISTA_30_PJ);
+
+                                Double taxa_credito_parcelado_2_pf = documentSnapshot.getDouble(KEY_CREDITO_PARCELADO_2_PF);
+                                Double taxa_credito_parcelado_30_pf = documentSnapshot.getDouble(KEY_CREDITO_PARCELADO_30_PF);
+                                Double taxa_credito_parcelado_2_pj = documentSnapshot.getDouble(KEY_CREDITO_PARCELADO_2_PJ);
+                                Double taxa_credito_parcelado_30_pj = documentSnapshot.getDouble(KEY_CREDITO_PARCELADO_30_PJ);
+
+                                Double taxa_debito_2_pf = documentSnapshot.getDouble(KEY_TAXA_DEBITO_2_PF);
+                                Double taxa_debito_30_pf = documentSnapshot.getDouble(KEY_TAXA_DEBITO_30_PF);
+                                Double taxa_debito_2_pj = documentSnapshot.getDouble(KEY_TAXA_DEBITO_2_PJ);
+                                Double taxa_debito_30_pj = documentSnapshot.getDouble(KEY_TAXA_DEBITO_30_PJ);
+
+                                Double taxa_de_parcelamento_2_pf = documentSnapshot.getDouble(KEY_PARCELAMENTO_2_PF);
+                                Double taxa_de_parcelamento_30_pf = documentSnapshot.getDouble(KEY_PARCELAMENTO_30_PF);
+                                Double taxa_de_parcelamento_2_pj = documentSnapshot.getDouble(KEY_PARCELAMENTO_2_PJ);
+                                Double taxa_de_parcelamento_30_pj = documentSnapshot.getDouble(KEY_PARCELAMENTO_30_PJ);
+
+                                if (opTaxa.equals("Debito")) {
+
+                                    if (opParcela.equals("Assumir")) { // TA OK
+                                        Double valor1 = Double.parseDouble(unmask(valor.trim()));
+                                        BigDecimal valorReceber_2_pf = new BigDecimal(valor1 - (valor1 * (taxa_debito_2_pf * 100)) / 100);
+                                        BigDecimal valorReceber_30_pf = new BigDecimal(valor1 - (valor1 * (taxa_debito_30_pf * 100)) / 100);
+                                        BigDecimal valorReceber_2_pj = new BigDecimal(valor1 - (valor1 * (taxa_debito_2_pj * 100)) / 100);
+                                        BigDecimal valorReceber_30_pj = new BigDecimal(valor1 - (valor1 * (taxa_debito_30_pj * 100)) / 100);
+
+                                        BigDecimal parcelaCliente_2_pf = new BigDecimal(valor1);
+                                        BigDecimal parcelaCliente_30_pf = new BigDecimal(valor1);
+                                        BigDecimal parcelaCliente_2_pj = new BigDecimal(valor1);
+                                        BigDecimal parcelaCliente_30_pj = new BigDecimal(valor1);
+
+                                        textViewResultadosUsuario.setText("Valor a receber\n" +
+                                                "2 Dias - Antecipado - Pessoa Jurídica: " + colocarVirgula(String.valueOf(valorReceber_2_pj.setScale(0, BigDecimal.ROUND_UP))) +
+                                                "\n30 Dias - Antecipado - Pessoa Jurídica: " + colocarVirgula(String.valueOf(valorReceber_30_pj.setScale(0, BigDecimal.ROUND_UP))) +
+                                                "\n2 Dias - Parcelado - Pessoa Física: " + colocarVirgula(String.valueOf(valorReceber_2_pf.setScale(0, BigDecimal.ROUND_UP))) +
+                                                "\n30 Dias - Parcelado - Pessoa Física: " + colocarVirgula(String.valueOf(valorReceber_30_pf.setScale(0, BigDecimal.ROUND_UP))));
+
+                                        textViewResultadosCliente.setText("Parcela do Cliente\n" +
+                                                opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_2_pf.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_30_pf.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_2_pj.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_30_pj.setScale(0, BigDecimal.ROUND_UP))));
+
+                                    } else { // REPASSAR OK
+
+                                        Double valor1 = Double.parseDouble(unmask(valor).trim());
+                                        BigDecimal valorCobrar_2_pf = new BigDecimal(valor1/(1-taxa_debito_2_pf));
+                                        BigDecimal valorCobrar_30_pf = new BigDecimal(valor1/(1-taxa_debito_30_pf));
+                                        BigDecimal valorCobrar_2_pj = new BigDecimal(valor1/(1-taxa_debito_2_pj));
+                                        BigDecimal valorCobrar_30_pj = new BigDecimal(valor1/(1-taxa_debito_30_pj));
+
+                                        textViewResultadosUsuario.setText("Valor a cobrar\n" +
+                                                "2 Dias - Antecipado - Pessoa Jurídica: " + colocarVirgula(String.valueOf(valorCobrar_2_pf.setScale(0, BigDecimal.ROUND_UP))) +
+                                                "\n30 Dias - Parcelado - Pessoa Jurídica: " + colocarVirgula(String.valueOf(valorCobrar_30_pf.setScale(0, BigDecimal.ROUND_UP))) +
+                                                "\n2 Dias - Antecipado - Pessoa Física: " + colocarVirgula(String.valueOf(valorCobrar_2_pj.setScale(0, BigDecimal.ROUND_UP))) +
+                                                "\n30 Dias - Parcelado - Pessoa Física: " + colocarVirgula(String.valueOf(valorCobrar_30_pj.setScale(0, BigDecimal.ROUND_UP))));
+
+                                        textViewResultadosCliente.setText("Parcela do Cliente\n" +
+                                                colocarVirgula(String.valueOf(valorCobrar_2_pf.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                colocarVirgula(String.valueOf(valorCobrar_30_pf.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                colocarVirgula(String.valueOf(valorCobrar_2_pj.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                colocarVirgula(String.valueOf(valorCobrar_30_pj.setScale(0, BigDecimal.ROUND_UP))));
+                                    }
+                                } else if (opTaxa != "Debito") {
+
+                                    if (opParcela.equals("Assumir")) { // OK
+                                        Double valor1 = Double.parseDouble(unmask(valor));
+                                        Double opTaxa1 = Double.parseDouble(unmask(opTaxa));
+
+                                        if (opTaxa1 > 1) {
+
+                                            BigDecimal valorReceber_2_pf = new BigDecimal(valor1 - (((taxa_de_parcelamento_2_pf*(opTaxa1)) + taxa_credito_parcelado_2_pf) * valor1));
+                                            BigDecimal valorReceber_30_pf = new BigDecimal(valor1 - (((taxa_de_parcelamento_30_pf*(opTaxa1)) + taxa_credito_parcelado_30_pf) * valor1));
+                                            BigDecimal valorReceber_2_pj = new BigDecimal(valor1 - (((taxa_de_parcelamento_2_pj*(opTaxa1)) + taxa_credito_parcelado_2_pj) * valor1));
+                                            BigDecimal valorReceber_30_pj = new BigDecimal(valor1 - (((taxa_de_parcelamento_30_pj*(opTaxa1)) + taxa_credito_parcelado_30_pj) * valor1));
+
+                                            BigDecimal parcelaCliente_2_pf = new BigDecimal(valor1 /opTaxa1);
+                                            BigDecimal parcelaCliente_30_pf = new BigDecimal(valor1/opTaxa1);
+                                            BigDecimal parcelaCliente_2_pj = new BigDecimal(valor1/opTaxa1);
+                                            BigDecimal parcelaCliente_30_pj = new BigDecimal(valor1/opTaxa1);
+
+                                            textViewResultadosUsuario.setText("Valor a receber\n" +
+                                                    "2 Dias - Antecipado - Pessoa Jurídica: " + colocarVirgula(String.valueOf(valorReceber_2_pj.setScale(0, BigDecimal.ROUND_UP))) +
+                                                    "\n30 Dias - Parcelado - Pessoa Jurídica: " + colocarVirgula(String.valueOf(valorReceber_30_pj.setScale(0, BigDecimal.ROUND_UP))) +
+                                                    "\n2 Dias - Antecipado - Pessoa Física: " + colocarVirgula(String.valueOf(valorReceber_2_pf.setScale(0, BigDecimal.ROUND_UP))) +
+                                                    "\n30 Dias - Parcelado - Pessoa Física: " + colocarVirgula(String.valueOf(valorReceber_30_pf.setScale(0, BigDecimal.ROUND_UP))));
+
+                                            textViewResultadosCliente.setText("Parcela do Cliente\n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_2_pf.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_30_pf.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_2_pj.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_30_pj.setScale(0, BigDecimal.ROUND_UP))));
+                                        } else {
+                                            BigDecimal valorReceber_2_pf = new BigDecimal(valor1-(valor1*(taxa_credito_a_vista_2_pf)));
+                                            BigDecimal valorReceber_30_pf = new BigDecimal(valor1-(valor1*(taxa_credito_a_vista_30_pf)));
+                                            BigDecimal valorReceber_2_pj = new BigDecimal(valor1-(valor1*(taxa_credito_a_vista_2_pj)));
+                                            BigDecimal valorReceber_30_pj = new BigDecimal(valor1-(valor1*(taxa_credito_a_vista_30_pj)));
+
+                                            BigDecimal parcelaCliente_2_pf = new BigDecimal(valor1);
+                                            BigDecimal parcelaCliente_30_pf = new BigDecimal(valor1);
+                                            BigDecimal parcelaCliente_2_pj = new BigDecimal(valor1);
+                                            BigDecimal parcelaCliente_30_pj = new BigDecimal(valor1);
+
+                                            textViewResultadosUsuario.setText("Valor a receber\n" +
+                                                    "2 Dias - Antecipado - Pessoa Jurídica: " + colocarVirgula(String.valueOf(valorReceber_2_pj.setScale(0, BigDecimal.ROUND_UP))) +
+                                                    "\n30 Dias - Parcelado - Pessoa Jurídica: " + colocarVirgula(String.valueOf(valorReceber_30_pj.setScale(0, BigDecimal.ROUND_UP))) +
+                                                    "\n2 Dias - Antecipado - Pessoa Física: " + colocarVirgula(String.valueOf(valorReceber_2_pf.setScale(0, BigDecimal.ROUND_UP))) +
+                                                    "\n30 Dias - Parcelado - Pessoa Física: " + colocarVirgula(String.valueOf(valorReceber_30_pf.setScale(0, BigDecimal.ROUND_UP))));
+
+                                            textViewResultadosCliente.setText("Parcela do Cliente\n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_2_pf.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_30_pf.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_2_pj.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_30_pj.setScale(0, BigDecimal.ROUND_UP))));
+                                        }
+
+                                    } else { // REPASSAR // TA OK
+                                        Double valor1 = Double.parseDouble(unmask(valor));
+                                        Double opTaxa1 = Double.parseDouble(unmask(opTaxa));
+
+                                        if (opTaxa1 > 1) {
+
+                                            BigDecimal valorCobrar_2_pf = new BigDecimal(valor1/(1-(taxa_credito_parcelado_2_pf + (taxa_de_parcelamento_2_pf*(opTaxa1)))));
+                                            BigDecimal valorCobrar_30_pf = new BigDecimal(valor1/(1-(taxa_credito_parcelado_30_pf + (taxa_de_parcelamento_30_pf*(opTaxa1)))));
+                                            BigDecimal valorCobrar_2_pj = new BigDecimal(valor1/(1-(taxa_credito_parcelado_2_pj + (taxa_de_parcelamento_2_pj*(opTaxa1)))));
+                                            BigDecimal valorCobrar_30_pj = new BigDecimal(valor1/(1-(taxa_credito_parcelado_30_pj + (taxa_de_parcelamento_30_pj*(opTaxa1)))));
+
+                                            BigDecimal parcelaCliente_2_pf = new BigDecimal(valor1/(1-(taxa_credito_parcelado_2_pf + (taxa_de_parcelamento_2_pf*(opTaxa1))))/opTaxa1);
+                                            BigDecimal parcelaCliente_30_pf = new BigDecimal(valor1/(1-(taxa_credito_parcelado_30_pf + (taxa_de_parcelamento_30_pf*(opTaxa1))))/opTaxa1);
+                                            BigDecimal parcelaCliente_2_pj = new BigDecimal(valor1/(1-(taxa_credito_parcelado_2_pj + (taxa_de_parcelamento_2_pj*(opTaxa1))))/opTaxa1);
+                                            BigDecimal parcelaCliente_30_pj = new BigDecimal(valor1/(1-(taxa_credito_parcelado_30_pj + (taxa_de_parcelamento_30_pj*(opTaxa1))))/opTaxa1);
+
+                                            textViewResultadosUsuario.setText("Valor a cobrar\n" +
+                                                    "2 Dias - Antecipado - Pessoa Jurídica: " + colocarVirgula(String.valueOf(valorCobrar_2_pj.setScale(0, BigDecimal.ROUND_UP))) +
+                                                    "\n30 Dias - Parcelado - Pessoa Jurídica: " + colocarVirgula(String.valueOf(valorCobrar_30_pj.setScale(0, BigDecimal.ROUND_UP))) +
+                                                    "\n2 Dias - Antecipado - Pessoa Física: " + colocarVirgula(String.valueOf(valorCobrar_2_pf.setScale(0, BigDecimal.ROUND_UP))) +
+                                                    "\n30 Dias - Parcelado - Pessoa Física: " + colocarVirgula(String.valueOf(valorCobrar_30_pf.setScale(0, BigDecimal.ROUND_UP))));
+
+                                            textViewResultadosCliente.setText("Parcela do Cliente\n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_2_pj.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_30_pj.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_2_pf.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_30_pf.setScale(0, BigDecimal.ROUND_UP))));
+                                        } else {
+                                            BigDecimal valorCobrar_2_pf = new BigDecimal(valor1/(1-taxa_credito_a_vista_2_pf));
+                                            BigDecimal valorCobrar_30_pf = new BigDecimal(valor1/(1-taxa_credito_a_vista_30_pf));
+                                            BigDecimal valorCobrar_2_pj = new BigDecimal(valor1/(1-taxa_credito_a_vista_2_pj));
+                                            BigDecimal valorCobrar_30_pj = new BigDecimal(valor1/(1-taxa_credito_a_vista_30_pj));
+
+                                            BigDecimal parcelaCliente_2_pf = new BigDecimal(valor1/(1-taxa_credito_a_vista_2_pf));
+                                            BigDecimal parcelaCliente_30_pf = new BigDecimal(valor1/(1-taxa_credito_a_vista_30_pf));
+                                            BigDecimal parcelaCliente_2_pj = new BigDecimal(valor1/(1-taxa_credito_a_vista_2_pj));
+                                            BigDecimal parcelaCliente_30_pj = new BigDecimal(valor1/(1-taxa_credito_a_vista_30_pj));
+
+                                            textViewResultadosUsuario.setText("Valor a cobrar\n" +
+                                                    "2 Dias - Antecipado - Pessoa Jurídica: " + colocarVirgula(String.valueOf(valorCobrar_2_pj.setScale(0, BigDecimal.ROUND_UP))) +
+                                                    "\n30 Dias - Parcelado - Pessoa Jurídica: " + colocarVirgula(String.valueOf(valorCobrar_30_pj.setScale(0, BigDecimal.ROUND_UP))) +
+                                                    "\n2 Dias - Antecipado - Pessoa Física: " + colocarVirgula(String.valueOf(valorCobrar_2_pf.setScale(0, BigDecimal.ROUND_UP))) +
+                                                    "\n30 Dias - Parcelado - Pessoa Física: " + colocarVirgula(String.valueOf(valorCobrar_30_pf.setScale(0, BigDecimal.ROUND_UP))));
+
+                                            textViewResultadosCliente.setText("Parcela do Cliente\n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_2_pj.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_30_pj.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_2_pf.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_30_pf.setScale(0, BigDecimal.ROUND_UP))));
                                         }
                                     }
                                 }
