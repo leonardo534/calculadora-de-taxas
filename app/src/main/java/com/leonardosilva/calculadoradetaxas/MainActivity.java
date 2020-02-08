@@ -28,18 +28,28 @@ import androidx.appcompat.app.AppCompatActivity;
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private static final String KEY_TAXA_DEBITO_CLIENTE = "taxa_debito_cliente";
     private static final String KEY_TAXA_DEBITO = "taxa_debito";
+    private static final String KEY_TAXA_DEBITO_FAT_MENOR_50 = "taxa_debito_fat_menor_50";
+    private static final String KEY_TAXA_DEBITO_FAT_MAIOR_50 = "taxa_debito_fat_maior_50";
     private static final String KEY_TAXA_DEBITO_NA_HORA = "taxa_debito_na_hora";
     private static final String KEY_TAXA_DEBITO_14 = "taxa_debito_14";
     private static final String KEY_TAXA_DEBITO_30 = "taxa_debito_30";
     private static final String KEY_TAXA_DEBITO_30_TARJA = "taxa_debito_30_tarja";
 
     private static final String KEY_CREDITO_PARCELADO = "taxa_credito_parcelado";
+    private static final String KEY_CREDITO_PARCELADO_2_FAT_MENOR_50 = "taxa_credito_parcelado_2_fat_menor_50";
+    private static final String KEY_CREDITO_PARCELADO_30_FAT_MENOR_50 = "taxa_credito_parcelado_30_fat_menor_50";
+    private static final String KEY_CREDITO_PARCELADO_2_FAT_MAIOR_50 = "taxa_credito_parcelado_2_fat_maior_50";
+    private static final String KEY_CREDITO_PARCELADO_30_FAT_MAIOR_50 = "taxa_credito_parcelado_30_fat_maior_50";
     private static final String KEY_CREDITO_PARCELADO_NA_HORA = "taxa_credito_parcelado_na_hora";
     private static final String KEY_CREDITO_PARCELADO_14 = "taxa_credito_parcelado_14";
     private static final String KEY_CREDITO_PARCELADO_30 = "taxa_credito_parcelado_30";
     private static final String KEY_CREDITO_PARCELADO_30_TARJA = "taxa_credito_parcelado_30_tarja";
 
     private static final String KEY_CREDITO_A_VISTA = "taxa_credito_a_vista";
+    private static final String KEY_CREDITO_A_VISTA_2_FAT_MENOR_50 = "taxa_credito_a_vista_2_fat_menor_50";
+    private static final String KEY_CREDITO_A_VISTA_30_FAT_MENOR_50 = "taxa_credito_a_vista_30_fat_menor_50";
+    private static final String KEY_CREDITO_A_VISTA_2_FAT_MAIOR_50 = "taxa_credito_a_vista_2_fat_maior_50";
+    private static final String KEY_CREDITO_A_VISTA_30_FAT_MAIOR_50 = "taxa_credito_a_vista_30_fat_maior_50";
     private static final String KEY_CREDITO_A_VISTA_NA_HORA = "taxa_credito_a_vista_na_hora";
     private static final String KEY_CREDITO_A_VISTA_14 = "taxa_credito_a_vista_14";
     private static final String KEY_CREDITO_A_VISTA_30 = "taxa_credito_a_vista_30";
@@ -158,6 +168,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             case "Mercado Pago":
                 mercadoPago(modelo.toLowerCase(), unmask(editResultado.getText().toString()), spParcelas.getSelectedItem().toString(), spTaxas.getSelectedItem().toString());
+                break;
+
+            case "Ifood":
+                ifood(modelo.toLowerCase(), unmask(editResultado.getText().toString()), spParcelas.getSelectedItem().toString(), spTaxas.getSelectedItem().toString());
                 break;
 
 
@@ -598,7 +612,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
-
     public void mercadoPago(final String maquineta, final String valor, final String opTaxa, final String opParcela) {
         if (editResultado.getText().length() == 0) {
             Toast.makeText(this, "Informe um valor", Toast.LENGTH_SHORT).show();
@@ -774,6 +787,196 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     });
         }
     }
+
+    public void ifood(final String maquineta, final String valor, final String opTaxa, final String opParcela) {
+        if (editResultado.getText().length() == 0) {
+            Toast.makeText(this, "Informe um valor", Toast.LENGTH_SHORT).show();
+            editResultado.requestFocus();
+        } else {
+            db.collection(maquineta).document(maquineta).get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                            if (documentSnapshot.exists()) {
+                                Double taxa_credito_a_vista_30_fat_menor_50 = documentSnapshot.getDouble(KEY_CREDITO_A_VISTA_30_FAT_MENOR_50);
+                                Double taxa_credito_a_vista_2_fat_menor_50 = documentSnapshot.getDouble(KEY_CREDITO_A_VISTA_2_FAT_MENOR_50);
+                                Double taxa_credito_a_vista_30_fat_maior_50 = documentSnapshot.getDouble(KEY_CREDITO_A_VISTA_30_FAT_MAIOR_50);
+                                Double taxa_credito_a_vista_2_fat_maior_50 = documentSnapshot.getDouble(KEY_CREDITO_A_VISTA_2_FAT_MAIOR_50);
+
+                                Double taxa_credito_parcelado_30_fat_menor_50 = documentSnapshot.getDouble(KEY_CREDITO_PARCELADO_30_FAT_MENOR_50);
+                                Double taxa_credito_parcelado_2_fat_menor_50 = documentSnapshot.getDouble(KEY_CREDITO_PARCELADO_2_FAT_MENOR_50);
+                                Double taxa_credito_parcelado_30_fat_maior_50 = documentSnapshot.getDouble(KEY_CREDITO_PARCELADO_30_FAT_MAIOR_50);
+                                Double taxa_credito_parcelado_2_fat_maior_50 = documentSnapshot.getDouble(KEY_CREDITO_PARCELADO_2_FAT_MAIOR_50);
+
+                                Double taxa_debito_fat_menor_50 = documentSnapshot.getDouble(KEY_TAXA_DEBITO_FAT_MENOR_50);
+                                Double taxa_debito_fat_maior_50 = documentSnapshot.getDouble(KEY_TAXA_DEBITO_FAT_MAIOR_50);
+
+                                Double taxa_de_parcelamento = documentSnapshot.getDouble(KEY_PARCELAMENTO);
+
+                                if (opTaxa.equals("Debito")) {
+
+                                    if (opParcela.equals("Assumir")) { // TA OK
+                                        Double valor1 = Double.parseDouble(unmask(valor.trim()));
+                                        BigDecimal valorReceber_30_fat_menor_50 = new BigDecimal(valor1 - (valor1 * (taxa_debito_fat_menor_50 * 100)) / 100);
+                                        BigDecimal valorReceber_2_fat_menor_50 = new BigDecimal(valor1 - (valor1 * (taxa_debito_fat_menor_50 * 100)) / 100);
+                                        BigDecimal valorReceber_30_fat_maior_50 = new BigDecimal(valor1 - (valor1 * (taxa_debito_fat_maior_50 * 100)) / 100);
+                                        BigDecimal valorReceber_2_fat_maior_50 = new BigDecimal(valor1 - (valor1 * (taxa_debito_fat_maior_50 * 100)) / 100);
+
+                                        textViewResultadosUsuario.setText("Valor a receber\n" +
+                                                "Faturamento menor que 50 mil - 30 dias: " + colocarVirgula(String.valueOf(valorReceber_30_fat_menor_50.setScale(0, BigDecimal.ROUND_UP))) +
+                                                "\nFaturamento menor que 50 mil - 2 dias: " + colocarVirgula(String.valueOf(valorReceber_2_fat_menor_50.setScale(0, BigDecimal.ROUND_UP))) +
+                                                "\nFaturamento maior que 50 mil - 30 dias: " + colocarVirgula(String.valueOf(valorReceber_30_fat_maior_50.setScale(0, BigDecimal.ROUND_UP))) +
+                                                "\nFaturamento maior que 50 mil - 2 dias: " + colocarVirgula(String.valueOf(valorReceber_2_fat_maior_50.setScale(0, BigDecimal.ROUND_UP))));
+
+                                        textViewResultadosCliente.setText("Parcela do Cliente\n" +
+                                                opTaxa + "\t" + colocarVirgula(String.valueOf(valor1)) + "\n" +
+                                                opTaxa + "\t" + colocarVirgula(String.valueOf(valor1)) + "\n" +
+                                                opTaxa + "\t" + colocarVirgula(String.valueOf(valor1)) + "\n" +
+                                                opTaxa + "\t" + colocarVirgula(String.valueOf(valor1)));
+
+                                    } else { // REPASSAR OK
+
+                                        Double valor1 = Double.parseDouble(unmask(valor).trim());
+                                        BigDecimal valorCobrar_30_fat_menor_50 = new BigDecimal(valor1/(1-taxa_debito_fat_menor_50));
+                                        BigDecimal valorCobrar_2_fat_menor_50 = new BigDecimal(valor1/(1-taxa_debito_fat_menor_50));
+                                        BigDecimal valorCobrar_30_fat_maior_50 = new BigDecimal(valor1/(1-taxa_debito_fat_maior_50));
+                                        BigDecimal valorCobrar_2_fat_maior_50 = new BigDecimal(valor1/(1-taxa_debito_fat_maior_50));
+
+                                        textViewResultadosUsuario.setText("Valor a cobrar\n" +
+                                                "Faturamento menor que 50 mil - 30 dias: " + colocarVirgula(String.valueOf(valorCobrar_30_fat_menor_50.setScale(0, BigDecimal.ROUND_UP))) +
+                                                "\nFaturamento menor que 50 mil - 2 dias: " + colocarVirgula(String.valueOf(valorCobrar_2_fat_menor_50.setScale(0, BigDecimal.ROUND_UP))) +
+                                                "\nFaturamento maior que 50 mil - 30 dias: " + colocarVirgula(String.valueOf(valorCobrar_30_fat_maior_50.setScale(0, BigDecimal.ROUND_UP))) +
+                                                "\nFaturamento maior que 50 mil - 2 dias: " + colocarVirgula(String.valueOf(valorCobrar_2_fat_maior_50.setScale(0, BigDecimal.ROUND_UP))));
+
+                                        textViewResultadosCliente.setText("Parcela do Cliente\n" +
+                                                colocarVirgula(String.valueOf(valorCobrar_30_fat_menor_50.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                colocarVirgula(String.valueOf(valorCobrar_2_fat_menor_50.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                colocarVirgula(String.valueOf(valorCobrar_30_fat_maior_50.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                colocarVirgula(String.valueOf(valorCobrar_2_fat_maior_50.setScale(0, BigDecimal.ROUND_UP))));
+                                    }
+                                } else if (opTaxa != "Debito") {
+
+                                    if (opParcela.equals("Assumir")) { // OK
+                                        Double valor1 = Double.parseDouble(unmask(valor));
+                                        Double opTaxa1 = Double.parseDouble(unmask(opTaxa));
+
+                                        if (opTaxa1 > 1) {
+
+                                            BigDecimal valorReceber_30_fat_menor_50 = new BigDecimal(valor1 - (((taxa_de_parcelamento*(opTaxa1-1)) + taxa_credito_parcelado_30_fat_menor_50) * valor1));
+                                            BigDecimal valorReceber_2_fat_menor_50 = new BigDecimal(valor1 - (((taxa_de_parcelamento*(opTaxa1-1)) + taxa_credito_parcelado_2_fat_menor_50) * valor1));
+                                            BigDecimal valorReceber_30_fat_maior_50 = new BigDecimal(valor1 - (((taxa_de_parcelamento*(opTaxa1-1)) + taxa_credito_parcelado_30_fat_maior_50) * valor1));
+                                            BigDecimal valorReceber_2_fat_maior_50 = new BigDecimal(valor1 - (((taxa_de_parcelamento*(opTaxa1-1)) + taxa_credito_parcelado_2_fat_maior_50) * valor1));
+
+                                            BigDecimal parcelaCliente_30_fat_menor_50 = new BigDecimal((valor1 - (((taxa_de_parcelamento*(opTaxa1-1)) + taxa_credito_parcelado_30_fat_menor_50) * valor1))/opTaxa1);
+                                            BigDecimal parcelaCliente_2_fat_menor_50 = new BigDecimal((valor1 - (((taxa_de_parcelamento*(opTaxa1-1)) + taxa_credito_parcelado_2_fat_menor_50) * valor1))/opTaxa1);
+                                            BigDecimal parcelaCliente_30_fat_maior_50 = new BigDecimal((valor1 - (((taxa_de_parcelamento*(opTaxa1-1)) + taxa_credito_parcelado_30_fat_maior_50) * valor1))/opTaxa1);
+                                            BigDecimal parcelaCliente_2_fat_maior_50 = new BigDecimal((valor1 - (((taxa_de_parcelamento*(opTaxa1-1)) + taxa_credito_parcelado_2_fat_maior_50) * valor1))/opTaxa1);
+
+                                            textViewResultadosUsuario.setText("Valor a receber\n" +
+                                                    "Faturamento menor que 50 mil - 30 dias: " + colocarVirgula(String.valueOf(valorReceber_30_fat_menor_50.setScale(0, BigDecimal.ROUND_UP))) +
+                                                    "\nFaturamento menor que 50 mil - 2 dias: " + colocarVirgula(String.valueOf(valorReceber_2_fat_menor_50.setScale(0, BigDecimal.ROUND_UP))) +
+                                                    "\nFaturamento maior que 50 mil - 30 dias: " + colocarVirgula(String.valueOf(valorReceber_30_fat_maior_50.setScale(0, BigDecimal.ROUND_UP))) +
+                                                    "\nFaturamento maior que 50 mil - 2 dias: " + colocarVirgula(String.valueOf(valorReceber_2_fat_maior_50.setScale(0, BigDecimal.ROUND_UP))));
+
+                                            textViewResultadosCliente.setText("Parcela do Cliente\n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_30_fat_menor_50.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_2_fat_menor_50.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_30_fat_maior_50.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_2_fat_maior_50.setScale(0, BigDecimal.ROUND_UP))));
+                                        } else {
+                                            BigDecimal valorReceber_30_fat_menor_50 = new BigDecimal(valor1-(valor1*(taxa_credito_a_vista_30_fat_menor_50)));
+                                            BigDecimal valorReceber_2_fat_menor_50 = new BigDecimal(valor1-(valor1*(taxa_credito_a_vista_2_fat_menor_50)));
+                                            BigDecimal valorReceber_30_fat_maior_50 = new BigDecimal(valor1-(valor1*(taxa_credito_a_vista_30_fat_maior_50)));
+                                            BigDecimal valorReceber_2_fat_maior_50 = new BigDecimal(valor1-(valor1*(taxa_credito_a_vista_2_fat_maior_50)));
+
+                                            BigDecimal parcelaCliente_30_fat_menor_50 = new BigDecimal(valor1);
+                                            BigDecimal parcelaCliente_2_fat_menor_50 = new BigDecimal(valor1);
+                                            BigDecimal parcelaCliente_30_fat_maior_50 = new BigDecimal(valor1);
+                                            BigDecimal parcelaCliente_2_fat_maior_50 = new BigDecimal(valor1);
+
+                                            textViewResultadosUsuario.setText("Valor a receber\n" +
+                                                    "Faturamento menor que 50 mil - 30 dias: " + colocarVirgula(String.valueOf(valorReceber_30_fat_menor_50.setScale(0, BigDecimal.ROUND_UP))) +
+                                                    "\nFaturamento menor que 50 mil - 2 dias: " + colocarVirgula(String.valueOf(valorReceber_2_fat_menor_50.setScale(0, BigDecimal.ROUND_UP))) +
+                                                    "\nFaturamento maior que 50 mil - 30 dias: " + colocarVirgula(String.valueOf(valorReceber_30_fat_maior_50.setScale(0, BigDecimal.ROUND_UP))) +
+                                                    "\nFaturamento maior que 50 mil - 2 dias: " + colocarVirgula(String.valueOf(valorReceber_2_fat_maior_50.setScale(0, BigDecimal.ROUND_UP))));
+
+                                            textViewResultadosCliente.setText("Parcela do Cliente\n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_30_fat_menor_50.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_2_fat_menor_50.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_30_fat_maior_50.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_2_fat_maior_50.setScale(0, BigDecimal.ROUND_UP))));
+                                        }
+
+                                    } else { // REPASSAR // TA OK
+                                        Double valor1 = Double.parseDouble(unmask(valor));
+                                        Double opTaxa1 = Double.parseDouble(unmask(opTaxa));
+
+                                        if (opTaxa1 > 1) {
+
+                                            BigDecimal valorCobrar_30_fat_menor_50 = new BigDecimal(valor1/(1-(taxa_credito_parcelado_30_fat_menor_50 + (taxa_de_parcelamento*(opTaxa1-1)))));
+                                            BigDecimal valorCobrar_2_fat_menor_50 = new BigDecimal(valor1/(1-(taxa_credito_parcelado_2_fat_menor_50 + (taxa_de_parcelamento*(opTaxa1-1)))));
+                                            BigDecimal valorCobrar_30_fat_maior_50 = new BigDecimal(valor1/(1-(taxa_credito_parcelado_30_fat_maior_50 + (taxa_de_parcelamento*(opTaxa1-1)))));
+                                            BigDecimal valorCobrar_2_fat_maior_50 = new BigDecimal(valor1/(1-(taxa_credito_parcelado_2_fat_maior_50 + (taxa_de_parcelamento*(opTaxa1-1)))));
+
+                                            BigDecimal parcelaCliente_30_fat_menor_50 = new BigDecimal(valor1/(1-(taxa_credito_parcelado_30_fat_menor_50 + (taxa_de_parcelamento*(opTaxa1-1))))/opTaxa1);
+                                            BigDecimal parcelaCliente_2_fat_menor_50 = new BigDecimal(valor1/(1-(taxa_credito_parcelado_2_fat_menor_50 + (taxa_de_parcelamento*(opTaxa1-1))))/opTaxa1);
+                                            BigDecimal parcelaCliente_30_fat_maior_50 = new BigDecimal(valor1/(1-(taxa_credito_parcelado_30_fat_maior_50 + (taxa_de_parcelamento*(opTaxa1-1))))/opTaxa1);
+                                            BigDecimal parcelaCliente_2_fat_maior_50 = new BigDecimal(valor1/(1-(taxa_credito_parcelado_2_fat_maior_50 + (taxa_de_parcelamento*(opTaxa1-1))))/opTaxa1);
+
+                                            textViewResultadosUsuario.setText("Valor a receber\n" +
+                                                    "Faturamento menor que 50 mil - 30 dias: " + colocarVirgula(String.valueOf(valorCobrar_30_fat_menor_50.setScale(0, BigDecimal.ROUND_UP))) +
+                                                    "\nFaturamento menor que 50 mil - 2 dias: " + colocarVirgula(String.valueOf(valorCobrar_2_fat_menor_50.setScale(0, BigDecimal.ROUND_UP))) +
+                                                    "\nFaturamento maior que 50 mil - 30 dias: " + colocarVirgula(String.valueOf(valorCobrar_30_fat_maior_50.setScale(0, BigDecimal.ROUND_UP))) +
+                                                    "\nFaturamento maior que 50 mil - 2 dias: " + colocarVirgula(String.valueOf(valorCobrar_2_fat_maior_50.setScale(0, BigDecimal.ROUND_UP))));
+
+                                            textViewResultadosCliente.setText("Parcela do Cliente\n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_30_fat_menor_50.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_2_fat_menor_50.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_30_fat_maior_50.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_2_fat_maior_50.setScale(0, BigDecimal.ROUND_UP))));
+                                        } else {
+                                            BigDecimal valorCobrar_30_fat_menor_50 = new BigDecimal(valor1/(1-taxa_credito_a_vista_30_fat_menor_50));
+                                            BigDecimal valorCobrar_2_fat_menor_50 = new BigDecimal(valor1/(1-taxa_credito_a_vista_2_fat_menor_50));
+                                            BigDecimal valorCobrar_30_fat_maior_50 = new BigDecimal(valor1/(1-taxa_credito_a_vista_30_fat_maior_50));
+                                            BigDecimal valorCobrar_2_fat_maior_50 = new BigDecimal(valor1/(1-taxa_credito_a_vista_2_fat_maior_50));
+
+                                            BigDecimal parcelaCliente_30_fat_menor_50 = new BigDecimal(valor1);
+                                            BigDecimal parcelaCliente_2_fat_menor_50 = new BigDecimal(valor1);
+                                            BigDecimal parcelaCliente_30_fat_maior_50 = new BigDecimal(valor1);
+                                            BigDecimal parcelaCliente_2_fat_maior_50 = new BigDecimal(valor1);
+
+                                            textViewResultadosUsuario.setText("Valor a receber\n" +
+                                                    "Faturamento menor que 50 mil - 30 dias: " + colocarVirgula(String.valueOf(valorCobrar_30_fat_menor_50.setScale(0, BigDecimal.ROUND_UP))) +
+                                                    "\nFaturamento menor que 50 mil - 2 dias: " + colocarVirgula(String.valueOf(valorCobrar_2_fat_menor_50.setScale(0, BigDecimal.ROUND_UP))) +
+                                                    "\nFaturamento maior que 50 mil - 30 dias: " + colocarVirgula(String.valueOf(valorCobrar_30_fat_maior_50.setScale(0, BigDecimal.ROUND_UP))) +
+                                                    "\nFaturamento maior que 50 mil - 2 dias: " + colocarVirgula(String.valueOf(valorCobrar_2_fat_maior_50.setScale(0, BigDecimal.ROUND_UP))));
+
+                                            textViewResultadosCliente.setText("Parcela do Cliente\n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_30_fat_menor_50.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_2_fat_menor_50.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_30_fat_maior_50.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_2_fat_maior_50.setScale(0, BigDecimal.ROUND_UP))));
+                                        }
+                                    }
+                                }
+
+                            } else {
+                                Log.d("TAGG", "Documento não existe");
+                            }
+
+                        }
+
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
+        }
+    }
+
 
     public static String unmask(String s) {
         return s.replaceAll("[.]", "").replaceAll("[-]", "")
