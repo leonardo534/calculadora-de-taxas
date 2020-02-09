@@ -141,16 +141,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     public void btnResultados(View view) {
         if (editResultado.getText().length() != 0) {
-//            valorPuro = Double.parseDouble(unmask(editResultado.getText().toString().trim())); //CONVERSÃO DE STRING PARA DOUBLE
             String modelo;
             modelo = spModelo.getSelectedItem().toString();
             if (isOnline() == false) {
                 Toast.makeText(this, "Conecte-se a internet para melhor experiencia", Toast.LENGTH_SHORT).show();
             }
-            buscarModelo(modelo);
+            buscarMaquineta(modelo);
             Log.d("TAG", modelo);
 
-//        buscarModelo(modelo);
         } else {
             Toast.makeText(this, "Informe um valor", Toast.LENGTH_LONG).show();
             editResultado.requestFocus();
@@ -171,27 +169,30 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return state;
     }
 
-    public void buscarModelo(String modelo) {
-        switch (modelo) {
+    public void buscarMaquineta(String maquineta) {
+        switch (maquineta) {
             case "Sumup":
-                sumup(modelo.toLowerCase(), unmask(editResultado.getText().toString()), spParcelas.getSelectedItem().toString(), spTaxas.getSelectedItem().toString());
+                sumup(maquineta.toLowerCase(), unmask(editResultado.getText().toString()), spParcelas.getSelectedItem().toString(), spTaxas.getSelectedItem().toString());
                 break;
 
-
             case "PagSeguro":
-                pagSeguro(modelo.toLowerCase(), unmask(editResultado.getText().toString()), spParcelas.getSelectedItem().toString(), spTaxas.getSelectedItem().toString());
+                pagSeguro(maquineta.toLowerCase(), unmask(editResultado.getText().toString()), spParcelas.getSelectedItem().toString(), spTaxas.getSelectedItem().toString());
                 break;
 
             case "Mercado Pago":
-                mercadoPago(modelo.toLowerCase(), unmask(editResultado.getText().toString()), spParcelas.getSelectedItem().toString(), spTaxas.getSelectedItem().toString());
+                mercadoPago(maquineta.toLowerCase(), unmask(editResultado.getText().toString()), spParcelas.getSelectedItem().toString(), spTaxas.getSelectedItem().toString());
                 break;
 
             case "Ifood":
-                ifood(modelo.toLowerCase(), unmask(editResultado.getText().toString()), spParcelas.getSelectedItem().toString(), spTaxas.getSelectedItem().toString());
+                ifood(maquineta.toLowerCase(), unmask(editResultado.getText().toString()), spParcelas.getSelectedItem().toString(), spTaxas.getSelectedItem().toString());
                 break;
 
             case "BEVImais":
-                bevimais(modelo.toLowerCase(), unmask(editResultado.getText().toString()), spParcelas.getSelectedItem().toString(), spTaxas.getSelectedItem().toString());
+                bevimais(maquineta.toLowerCase(), unmask(editResultado.getText().toString()), spParcelas.getSelectedItem().toString(), spTaxas.getSelectedItem().toString());
+                break;
+
+            case "BEVI":
+                bevi(maquineta.toLowerCase(), unmask(editResultado.getText().toString()), spParcelas.getSelectedItem().toString(), spTaxas.getSelectedItem().toString());
                 break;
 
             default:
@@ -417,7 +418,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                             taxaIntermediacao_30 = credito_parcelado_30;
                                             taxaIntermediacao_30_tarja = credito_parcelado_30_tarja;
 
-                                            //-----------------------------------------------------------------------------//
 
                                             Double valorIntermediacao_na_hora = ((valor1 * (taxaIntermediacao_na_hora * 100)) / 100) / 100;
                                             Double valorIntermediacao_14 = ((valor1 * (taxaIntermediacao_14 * 100)) / 100) / 100;
@@ -458,7 +458,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                             taxaParcelamentoTotal_30 = (desagioTotal_30 / valor1) * 100;
                                             taxaParcelamentoTotal_30_tarja = (desagioTotal_30_tarja / valor1) * 100;
 
-///////////////////////////////////
                                             valorParcelamentoTotal_na_hora = valor1 - valorPresenteTotal_na_hora;
                                             valorParcelamentoTotal_14 = valor1 - valorPresenteTotal_14;
                                             valorParcelamentoTotal_30 = valor1 - valorPresenteTotal_30;
@@ -481,7 +480,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                                     opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente.setScale(0, BigDecimal.ROUND_UP))) + "\n" +
                                                     opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente.setScale(0, BigDecimal.ROUND_UP))) + "\n" +
                                                     opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente.setScale(0, BigDecimal.ROUND_UP))));
-///////////////////////////////////////////////////
+
                                         } else if (opTaxa1 == 1) {
                                             valorReceber_na_hora = new BigDecimal(valor1 - ((valor1 * (credito_a_vista_na_hora * 100)) / 100));
                                             valorReceber_14 = new BigDecimal(valor1 - ((valor1 * (credito_a_vista_14 * 100)) / 100));
@@ -505,19 +504,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                         }
 
 
-                                        //----------------------------------------------------------------------------------//
-                                        //Log.d("valorReceber_na_hora",""+valor1+" - "+(valorIntermediacao_na_hora*100) +" - "+valorParcelamentoTotal_na_hora);
-
-
-//                                        textViewResultadosUsuario.setText("Valor a receber\n" +
-//                                                "Na hora: " + colocarVirgula(String.valueOf(valorReceber_na_hora.setScale(0, BigDecimal.ROUND_UP))) +
-//                                                "\n14 dias:" + colocarVirgula(String.valueOf(valorReceber_14.setScale(0, BigDecimal.ROUND_UP)))+
-//                                                "\n30 dias:" + colocarVirgula(String.valueOf(valorReceber_30.setScale(0, BigDecimal.ROUND_UP))));
-//
-//                                        textViewResultadosCliente.setText("Parcela do Cliente\n" +
-//                                                opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente.setScale(0, BigDecimal.ROUND_UP))) + "\n" +
-//                                                opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente.setScale(0, BigDecimal.ROUND_UP)))+ "\n" +
-//                                                opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente.setScale(0, BigDecimal.ROUND_UP))));
                                     } else { // REPASSAR // TA OK
                                         Double valor1 = Double.parseDouble(unmask(valor));
                                         Double opTaxa1 = Double.parseDouble(unmask(opTaxa));
@@ -532,8 +518,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                             taxaIntermediacao_14 = credito_parcelado_14;
                                             taxaIntermediacao_30 = credito_parcelado_30;
                                             taxaIntermediacao_30_tarja = credito_parcelado_30_tarja;
-
-                                            //-----------------------------------------------------------------------------//
 
                                             Double valorIntermediacao_na_hora = ((valor1 * (taxaIntermediacao_na_hora * 100)) / 100) / 100;
                                             Double valorIntermediacao_14 = ((valor1 * (taxaIntermediacao_14 * 100)) / 100) / 100;
@@ -574,7 +558,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                             taxaParcelamentoTotal_30 = (desagioTotal_30 / valor1) * 100;
                                             taxaParcelamentoTotal_30_tarja = (desagioTotal_30_tarja / valor1) * 100;
 
-///////////////////////////////////
                                             valorParcelamentoTotal_na_hora = valor1 - valorPresenteTotal_na_hora;
                                             valorParcelamentoTotal_14 = valor1 - valorPresenteTotal_14;
                                             valorParcelamentoTotal_30 = valor1 - valorPresenteTotal_30;
@@ -1195,6 +1178,151 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    public void bevi(final String maquineta, final String valor, final String opTaxa, final String opParcela) {
+        if (editResultado.getText().length() == 0) {
+            Toast.makeText(this, "Informe um valor", Toast.LENGTH_SHORT).show();
+            editResultado.requestFocus();
+        } else {
+            db.collection(maquineta).document(maquineta).get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                            if (documentSnapshot.exists()) {
+                                Double taxa_credito_a_vista_2_pf = documentSnapshot.getDouble(KEY_CREDITO_A_VISTA_2_PF);
+                                Double taxa_credito_a_vista_2_pj = documentSnapshot.getDouble(KEY_CREDITO_A_VISTA_2_PJ);
+
+                                Double taxa_credito_parcelado_2_pf = documentSnapshot.getDouble(KEY_CREDITO_PARCELADO_2_PF);
+                                Double taxa_credito_parcelado_2_pj = documentSnapshot.getDouble(KEY_CREDITO_PARCELADO_2_PJ);
+
+                                Double taxa_debito_2_pf = documentSnapshot.getDouble(KEY_TAXA_DEBITO_2_PF);
+                                Double taxa_debito_2_pj = documentSnapshot.getDouble(KEY_TAXA_DEBITO_2_PJ);
+
+                                Double taxa_de_parcelamento_2_pf = documentSnapshot.getDouble(KEY_PARCELAMENTO_2_PF);
+                                Double taxa_de_parcelamento_2_pj = documentSnapshot.getDouble(KEY_PARCELAMENTO_2_PJ);
+
+                                if (opTaxa.equals("Debito")) {
+
+                                    if (opParcela.equals("Assumir")) { // TA OK
+                                        Double valor1 = Double.parseDouble(unmask(valor.trim()));
+                                        BigDecimal valorReceber_2_pf = new BigDecimal(valor1 - (valor1 * (taxa_debito_2_pf * 100)) / 100);
+                                        BigDecimal valorReceber_2_pj = new BigDecimal(valor1 - (valor1 * (taxa_debito_2_pj * 100)) / 100);
+
+                                        BigDecimal parcelaCliente_2_pf = new BigDecimal(valor1);
+                                        BigDecimal parcelaCliente_2_pj = new BigDecimal(valor1);
+
+                                        textViewResultadosUsuario.setText("Valor a receber\n" +
+                                                "Pessoa Jurídica: " + colocarVirgula(String.valueOf(valorReceber_2_pj.setScale(0, BigDecimal.ROUND_UP))) +
+                                                "\nPessoa Física: " + colocarVirgula(String.valueOf(valorReceber_2_pf.setScale(0, BigDecimal.ROUND_UP))));
+
+                                        textViewResultadosCliente.setText("Parcela do Cliente\n" +
+                                                opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_2_pf.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_2_pj.setScale(0, BigDecimal.ROUND_UP))));
+
+                                    } else { // REPASSAR OK
+
+                                        Double valor1 = Double.parseDouble(unmask(valor).trim());
+                                        BigDecimal valorCobrar_2_pf = new BigDecimal(valor1/(1-taxa_debito_2_pf));
+                                        BigDecimal valorCobrar_2_pj = new BigDecimal(valor1/(1-taxa_debito_2_pj));
+
+                                        textViewResultadosUsuario.setText("Valor a cobrar\n" +
+                                                "Pessoa Jurídica: " + colocarVirgula(String.valueOf(valorCobrar_2_pf.setScale(0, BigDecimal.ROUND_UP))) +
+                                                "\nPessoa Física: " + colocarVirgula(String.valueOf(valorCobrar_2_pj.setScale(0, BigDecimal.ROUND_UP))));
+
+                                        textViewResultadosCliente.setText("Parcela do Cliente\n" +
+                                                colocarVirgula(String.valueOf(valorCobrar_2_pf.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                colocarVirgula(String.valueOf(valorCobrar_2_pj.setScale(0, BigDecimal.ROUND_UP))));
+                                    }
+                                } else if (opTaxa != "Debito") {
+
+                                    if (opParcela.equals("Assumir")) { // OK
+                                        Double valor1 = Double.parseDouble(unmask(valor));
+                                        Double opTaxa1 = Double.parseDouble(unmask(opTaxa));
+
+                                        if (opTaxa1 > 1) {
+
+                                            BigDecimal valorReceber_2_pf = new BigDecimal(valor1 - (((taxa_de_parcelamento_2_pf*(opTaxa1)) + taxa_credito_parcelado_2_pf) * valor1));
+                                            BigDecimal valorReceber_2_pj = new BigDecimal(valor1 - (((taxa_de_parcelamento_2_pj*(opTaxa1)) + taxa_credito_parcelado_2_pj) * valor1));
+
+                                            BigDecimal parcelaCliente_2_pf = new BigDecimal(valor1 /opTaxa1);
+                                            BigDecimal parcelaCliente_2_pj = new BigDecimal(valor1/opTaxa1);
+
+                                            textViewResultadosUsuario.setText("Valor a receber\n" +
+                                                    "Pessoa Jurídica: " + colocarVirgula(String.valueOf(valorReceber_2_pj.setScale(0, BigDecimal.ROUND_UP))) +
+                                                    "\nPessoa Física: " + colocarVirgula(String.valueOf(valorReceber_2_pf.setScale(0, BigDecimal.ROUND_UP))));
+
+                                            textViewResultadosCliente.setText("Parcela do Cliente\n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_2_pf.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_2_pj.setScale(0, BigDecimal.ROUND_UP))));
+                                        } else {
+                                            BigDecimal valorReceber_2_pf = new BigDecimal(valor1-(valor1*(taxa_credito_a_vista_2_pf)));
+                                            BigDecimal valorReceber_2_pj = new BigDecimal(valor1-(valor1*(taxa_credito_a_vista_2_pj)));
+
+                                            BigDecimal parcelaCliente_2_pf = new BigDecimal(valor1);
+                                            BigDecimal parcelaCliente_2_pj = new BigDecimal(valor1);
+
+                                            textViewResultadosUsuario.setText("Valor a receber\n" +
+                                                    "Pessoa Jurídica: " + colocarVirgula(String.valueOf(valorReceber_2_pj.setScale(0, BigDecimal.ROUND_UP))) +
+                                                    "\nPessoa Física: " + colocarVirgula(String.valueOf(valorReceber_2_pf.setScale(0, BigDecimal.ROUND_UP))));
+
+                                            textViewResultadosCliente.setText("Parcela do Cliente\n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_2_pf.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_2_pj.setScale(0, BigDecimal.ROUND_UP))));
+                                        }
+
+                                    } else { // REPASSAR // TA OK
+                                        Double valor1 = Double.parseDouble(unmask(valor));
+                                        Double opTaxa1 = Double.parseDouble(unmask(opTaxa));
+
+                                        if (opTaxa1 > 1) {
+
+                                            BigDecimal valorCobrar_2_pf = new BigDecimal(valor1/(1-(taxa_credito_parcelado_2_pf + (taxa_de_parcelamento_2_pf*(opTaxa1)))));
+                                            BigDecimal valorCobrar_2_pj = new BigDecimal(valor1/(1-(taxa_credito_parcelado_2_pj + (taxa_de_parcelamento_2_pj*(opTaxa1)))));
+
+                                            BigDecimal parcelaCliente_2_pf = new BigDecimal(valor1/(1-(taxa_credito_parcelado_2_pf + (taxa_de_parcelamento_2_pf*(opTaxa1))))/opTaxa1);
+                                            BigDecimal parcelaCliente_2_pj = new BigDecimal(valor1/(1-(taxa_credito_parcelado_2_pj + (taxa_de_parcelamento_2_pj*(opTaxa1))))/opTaxa1);
+
+                                            textViewResultadosUsuario.setText("Valor a cobrar\n" +
+                                                    "Pessoa Jurídica: " + colocarVirgula(String.valueOf(valorCobrar_2_pj.setScale(0, BigDecimal.ROUND_UP))) +
+                                                    "\nPessoa Física: " + colocarVirgula(String.valueOf(valorCobrar_2_pf.setScale(0, BigDecimal.ROUND_UP))));
+
+                                            textViewResultadosCliente.setText("Parcela do Cliente\n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_2_pj.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_2_pf.setScale(0, BigDecimal.ROUND_UP))));
+                                        } else {
+                                            BigDecimal valorCobrar_2_pf = new BigDecimal(valor1/(1-taxa_credito_a_vista_2_pf));
+                                            BigDecimal valorCobrar_2_pj = new BigDecimal(valor1/(1-taxa_credito_a_vista_2_pj));
+
+                                            BigDecimal parcelaCliente_2_pf = new BigDecimal(valor1/(1-taxa_credito_a_vista_2_pf));
+                                            BigDecimal parcelaCliente_2_pj = new BigDecimal(valor1/(1-taxa_credito_a_vista_2_pj));
+
+                                            textViewResultadosUsuario.setText("Valor a cobrar\n" +
+                                                    "Pessoa Jurídica: " + colocarVirgula(String.valueOf(valorCobrar_2_pj.setScale(0, BigDecimal.ROUND_UP))) +
+                                                    "\nPessoa Física: " + colocarVirgula(String.valueOf(valorCobrar_2_pf.setScale(0, BigDecimal.ROUND_UP))));
+
+                                            textViewResultadosCliente.setText("Parcela do Cliente\n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_2_pj.setScale(0, BigDecimal.ROUND_UP))) + " \n" +
+                                                    opTaxa + "\t" + colocarVirgula(String.valueOf(parcelaCliente_2_pf.setScale(0, BigDecimal.ROUND_UP))));
+                                        }
+                                    }
+                                }
+
+                            } else {
+                                Log.d("TAGG", "Documento não existe");
+                            }
+
+                        }
+
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
+        }
+    }
+    
 
     public static String unmask(String s) {
         return s.replaceAll("[.]", "").replaceAll("[-]", "")
