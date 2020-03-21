@@ -16,6 +16,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
@@ -26,6 +31,10 @@ import java.math.BigDecimal;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private static final String KEY_TAXA_DEBITO_CLIENTE = "taxa_debito_cliente";
@@ -90,6 +99,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     TextView textViewResultadosUsuario;
     TextView textViewResultadosCliente;
 
+    private AdView mAdView;
+    private InterstitialAd mInterstitialAd;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -119,7 +130,38 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         editResultado.addTextChangedListener(new MoneyTextWatcher(editResultado));
 
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+        AdView adView = new AdView(this);
+        adView.setAdSize(AdSize.BANNER);
+        adView.setAdUnitId("ca-app-pub-7575390723872949/2713603457");
+
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-7575390723872949/5682902793");
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                // Load the next interstitial.
+                mInterstitialAd.loadAd(new AdRequest.Builder().build());
+            }
+
+        });
+
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+        AdSize adSize = new AdSize(300, 50);
+
+        // TODO: Add adView to your view hierarchy.
     } // FIM DO ONCREATE
+
 
     private void inicializarFirebase() {
         FirebaseApp.initializeApp(MainActivity.this);
@@ -147,6 +189,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     public void btnResultados(View view) {
         if (editResultado.getText().length() != 0) {
+            if (mInterstitialAd.isLoaded()) {
+                mInterstitialAd.show();
+            } else {
+                Log.d("TAG", "The interstitial wasn't loaded yet.");
+            }
             String modelo;
             modelo = spModelo.getSelectedItem().toString();
             if (isOnline() == false) {
